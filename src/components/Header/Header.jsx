@@ -3,9 +3,11 @@ import React from "react";
 import { Container, Logo, LogoutBtn } from "../index";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import authSlice from "../../store/authSlice";
+import authSlice from "../../store/authSlice";
 function Header() {
-  const authStatus = useSelector((state) => state.auth.status);
+  // const authStatus = useSelector((state) => state.auth.status);
+  // const authStatus = useSelector((state) => state.auth.status);
+  const authStatus = useSelector((state) => state.auth?.status);
   const navigate = useNavigate();
 
   const navItems = [

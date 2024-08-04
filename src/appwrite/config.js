@@ -12,7 +12,7 @@ export class Service {
       .setEndpoint(conf.appwriteUrl)
       .setProject(conf.appwriteProjectId);
     this.database = new Databases(this.client);
-    this.bucket = new this.Storage(this.client);
+    this.bucket = new Storage(this.client);
   }
 
   async createPost({ tile, slug, content, featuredImage, status, userId }) {
