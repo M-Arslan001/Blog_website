@@ -8,7 +8,7 @@ import { Header, Footer } from "./components";
 import { Outlet } from "react-router-dom";
 
 function App() {
-  const [loading, seteLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -22,7 +22,7 @@ function App() {
           dispatch(logout());
         }
       })
-      .finally(() => seteLoading(false));
+      .finally(() => setLoading(false));
   }, []);
 
   return !loading ? (
@@ -30,7 +30,7 @@ function App() {
       <div className=" w-full block">
         <Header />
         <main>
-          TODO: <Outlet />{" "}
+          TODO: <Outlet />
         </main>
         <Footer />
       </div>
