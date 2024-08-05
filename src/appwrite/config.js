@@ -1,28 +1,27 @@
 import conf from "../conf/conf";
-// eslint-disable-next-line no-unused-vars
 import { Client, ID, Databases, Storage, Query } from "appwrite";
 
 export class Service {
   client = new Client();
-  database;
+  databases;
   bucket;
 
   constructor() {
     this.client
       .setEndpoint(conf.appwriteUrl)
       .setProject(conf.appwriteProjectId);
-    this.database = new Databases(this.client);
+    this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
   }
 
-  async createPost({ tile, slug, content, featuredImage, status, userId }) {
+  async createPost({ title, slug, content, featuredImage, status, userId }) {
     try {
-      return await this.database.createDocument(
+      return await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug,
         {
-          tile,
+          title,
           content,
           featuredImage,
           status,
@@ -30,94 +29,96 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("error encounter of createPost:=>error", error);
+      console.log("Appwrite service :: createPost :: error", error);
     }
   }
-  async updatePost(slug, { tile, content, featuredImage, status }) {
+
+  async updatePost(slug, { title, content, featuredImage, status }) {
     try {
-      return await this.database.updateDocument(
+      return await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug,
         {
-          tile,
+          title,
+          content,
           featuredImage,
           status,
-          content,
         }
       );
     } catch (error) {
-      console.log("upadete post error encounter:=>error", error);
+      console.log("Appwrite service :: updatePost :: error", error);
     }
   }
+
   async deletePost(slug) {
     try {
-      await this.database.deleteDocument(
+      await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug
       );
       return true;
     } catch (error) {
-      console.log("error encounter deletePost:=>error", error);
+      console.log("Appwrite service :: deletePost :: error", error);
       return false;
     }
   }
 
   async getPost(slug) {
     try {
-      return await this.database.getDocument(
+      return await this.databases.getDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug
       );
     } catch (error) {
-      console.log("error encouter=>getPost", error);
+      console.log("Appwrite service :: getPost :: error", error);
       return false;
     }
   }
+
   async getPosts(queries = [Query.equal("status", "active")]) {
     try {
-      return await this.database.listDocuments(
+      return await this.databases.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         queries
       );
     } catch (error) {
-      console.log("getpost queries error:>> ", error);
+      console.log("Appwrite service :: getPosts :: error", error);
       return false;
     }
   }
 
-  //  files upload methods/services
-
+  // File upload service
   async uploadFile(file) {
     try {
       return await this.bucket.createFile(
-        conf.appwriteBucketiD,
+        conf.appwriteBucketId,
         ID.unique(),
         file
       );
     } catch (error) {
-      console.log("upload flie error:>>", error);
+      console.log("Appwrite service :: uploadFile :: error", error);
       return false;
     }
   }
 
-  async deleteFiles(fileId) {
+  async deleteFile(fileId) {
     try {
-      return await this.bucket.deleteFiles(conf.appwriteBucketiD, fileId);
-      //   return true;
+      await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
+      return true;
     } catch (error) {
-      console.log("delete files error:>>", error);
+      console.log("Appwrite service :: deleteFile :: error", error);
       return false;
     }
   }
 
-  //   get file
   getFilePreview(fileId) {
-    return this.bucket.getFilePreview(conf.appwriteBucketiD, fileId);
+    return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
   }
 }
+
 const service = new Service();
 export default service;

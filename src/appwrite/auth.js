@@ -1,5 +1,3 @@
-/* eslint-disable no-unreachable */
-/* eslint-disable no-useless-catch */
 import conf from "../conf/conf";
 import { Client, Account, ID } from "appwrite";
 
@@ -45,18 +43,20 @@ export class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
-      console.log("Appwrite serive :: getCurrentUser :: error", error);
+      console.log("Appwrite service :: getCurrentUser :: error", error);
     }
 
     return null;
   }
+
   async logout() {
     try {
       await this.account.deleteSessions();
     } catch (error) {
-      console.log("successfuly logout:", error);
+      console.log("Appwrite service :: logout :: error", error);
     }
   }
 }
+
 const authService = new AuthService();
 export default authService;
